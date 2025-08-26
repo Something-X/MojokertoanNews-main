@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MojokertoanNews</title>
+    <link rel="stylesheet" href="{{ asset('vendor/bootstrap-icons/bootstrap-icons.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/getbootstrap/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/fontawesome/all.min.css') }}">
+
+    <style>
+        /* Custom CSS untuk mempercantik tampilan */
+        .bg-primary-custom {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+        }
+
+        .category-nav:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            border-radius: 6px;
+            transform: translateY(-1px);
+            transition: all 0.3s ease;
+        }
+
+        .news-card {
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+
+        .category-badge {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .btn-read-more {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .btn-read-more:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+            color: white;
+        }
+
+        .trending-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .trending-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .search-input {
+            border-radius: 25px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 8px 20px;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .search-input:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+            color: white;
+        }
+
+        .time-badge {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    @include('layouts.partials.navbar-berita')
+
+    <!-- Hero Section -->
+    @foreach ($heroBerita as $item)
+        <section class="hero-section py-5">
+            <div class="container">
+                <div class="row">
+                    {{-- HERO KIRI (berita pertama) --}}
+                    <div class="col-md-8">
+                        @foreach ($heroBerita as $item)
+                            @if ($loop->first)
+                                <div class="position-relative">
+                                    @if ($item->gambar)
+                                        <img src="{{ asset('uploads/berita/' . $item->gambar) }}"
+                                            alt="{{ $item->judul }}" class="img-fluid rounded shadow-lg w-100"
+                                            style="height: 600px; object-fit: cover;">
+                                    @else
+                                        <img src="{{ asset('dummy/monarch-butterfly.png') }}" alt="No Image"
+                                            class="img-fluid rounded shadow-lg w-100"
+                                            style="height: 600px; object-fit: cover;">
+                                    @endif
+
+                                    <div class="position-absolute bottom-0 start-0 w-100">
+                                        <div class="text-white p-3"
+                                            style="background: rgba(0,0,0,0.5); border-radius: 1rem;">
+                                            <span class="badge bg-primary"
+                                                style="font-size: 0.75rem;">{{ $item->kategori->nama ?? 'Umum' }}</span>
+                                            <h2 class="fw-bold mt-2 mb-3" style="font-size: 2rem;">{{ $item->judul }}
+                                            </h2>
+                                            <p class="mb-3" style="font-size: 0.9rem;">
+                                                {{ Str::limit($item->konten, 335) }}</p>
+                                            <div class="d-flex align-items-center gap-2 mb-3"
+                                                style="font-size: 0.8rem;">
+                                                <small>Oleh: Gilang Sampurno</small>
+                                                <small>•</small>
+                                                <span>{{ $item->waktu->diffForHumans() }}</span>
+                                            </div>
+                                            <a href="#" class="btn-read-more btn-sm"
+                                                style="font-size: 0.8rem;">Baca Selengkapnya</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+
+                    {{-- BERITA SAMPING (urutan ke 2, 3, 4) --}}
+                    <div class="col-md-4 d-flex flex-column" style="height: 600px;">
+                        <div class="d-grid gap-3 h-100" style="grid-template-rows: repeat(3, 1fr);">
+                            @foreach ($heroBeritaSamping as $item)
+                                @if ($loop->iteration > 1 && $loop->iteration <= 4)
+                                    <div class="d-flex bg-light rounded shadow-sm overflow-hidden h-100">
+                                        <div class="flex-shrink-0" style="width:190px;height:100%;overflow:hidden;">
+                                            <img src="{{ $item->gambar ? asset('uploads/berita/' . $item->gambar) : asset('dummy/monarch-butterfly.png') }}"
+                                                alt="{{ $item->judul }}" class="w-100 h-100 object-fit-cover">
+                                        </div>
+                                        <div class="p-2 flex-grow-1 d-flex flex-column justify-content-between">
+                                            <div>
+                                                <span
+                                                    class="badge bg-primary">{{ $item->kategori->nama ?? 'Umum' }}</span>
+                                                <h6 class="fw-bold mt-1 mb-1">{{ Str::limit($item->judul, 50) }}</h6>
+                                            </div>
+                                            <small class="text-muted">{{ $item->waktu->diffForHumans() }}</small>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            </div>
+        </section>
+    @endforeach
+
+    <!-- News Grid -->
+    <section class="py-5">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="h4 fw-bold">Berita Terbaru</h3>
+                <span class="text-muted" id="newsCount">{{ $beritaTerbaru->count() }} artikel ditemukan</span>
+            </div>
+
+            <div class="row" id="newsGrid">
+                @foreach ($beritaTerbaru as $item)
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card news-card h-100">
+                            @if ($item->gambar == null)
+                                <img src="{{ asset('dummy/monarch-butterfly.png') }}" alt="No Image"
+                                    class="card-img-top" style="height: 200px; object-fit: cover;">
+                            @else
+                                <img src="{{ asset('uploads/berita/' . $item->gambar) }}" class="card-img-top"
+                                    alt="{{ $item->gambar }}" style="height: 200px; object-fit: cover;">
+                            @endif
+                            <div class="card-body d-flex flex-column">
+                                <span class="category-badge mb-2">{{ $item->kategori->nama }}</span>
+                                <h5 class="card-title">{{ $item->judul }}</h5>
+                                <p class="card-text text-muted flex-grow-1">{{ Str::limit($item->konten, 120) }}</p>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <small class="text-muted">Oleh: Gilang Sampurno</small>
+                                    <span class="time-badge">{{ $item->waktu->diffForHumans() }}</span>
+                                </div>
+                                <div class="mb-2">
+                                    <small class="text-muted">Diperbarui:
+                                        {{ $item->updated_at->diffForHumans() }}</small>
+                                </div>
+                                <a href="#" class="btn-read-more text-center">Baca Selengkapnya</a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <!-- Trending Sidebar -->
+    {{-- <section class="bg-light py-5">
+        <div class="container">
+            <h3 class="h4 fw-bold mb-4">Berita Trending</h3>
+            <div class="row">
+                <div class="col-lg-8">
+                    <div id="trendingNews">
+                        @foreach ($trending as $item)
+                            <div class="trending-item">
+                                <div class="row align-items-center">
+                                    <div class="col-3">
+                                        @if ($item->gambar == null)
+                                            <img src="{{ asset('dummy/monarch-butterfly.png') }}" alt="No Image" class="img-fluid rounded" style="height: 60px; object-fit: cover;">
+                                        @else
+                                            <img src="{{ asset('uploads/berita/' . $item->gambar) }}" alt="{{ $item->gambar }}" class="img-fluid rounded" style="height: 60px; object-fit: cover;">
+                                        @endif
+                                    </div>
+                                    <div class="col-9">
+                                        <h6 class="mb-1">${news.title}</h6>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <small class="text-muted">${news.category}</small>
+                                            <small class="text-muted">•</small>
+                                            <span class="time-badge">${getTimeAgo(news.uploadTime)}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> --}}
+
+    <!-- Footer -->
+    @include('layouts.partials.footer-berita')
+
+    <script src="{{ asset('vendor/getbootstrap/bootstrap.js') }}"></script>
+    <script src="{{ asset('vendor/fontawesome/all.min.js') }}"></script>
+</body>
+
+</html>
