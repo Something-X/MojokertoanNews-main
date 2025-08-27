@@ -116,32 +116,26 @@
     @foreach ($heroBerita as $item)
         <section class="hero-section py-5">
             <div class="container">
-                <div class="row">
+                <div class="row g-4">
                     {{-- HERO KIRI (berita pertama) --}}
-                    <div class="col-md-8">
+                    <div class="col-lg-8 col-12">
                         @foreach ($heroBerita as $item)
                             @if ($loop->first)
                                 <div class="position-relative">
-                                    @if ($item->gambar)
-                                        <img src="{{ asset('uploads/berita/' . $item->gambar) }}"
-                                            alt="{{ $item->judul }}" class="img-fluid rounded shadow-lg w-100"
-                                            style="height: 600px; object-fit: cover;">
-                                    @else
-                                        <img src="{{ asset('dummy/monarch-butterfly.png') }}" alt="No Image"
-                                            class="img-fluid rounded shadow-lg w-100"
-                                            style="height: 600px; object-fit: cover;">
-                                    @endif
+                                    <img src="{{ $item->gambar ? asset('uploads/berita/' . $item->gambar) : asset('dummy/monarch-butterfly.png') }}"
+                                        alt="{{ $item->judul }}" class="img-fluid rounded shadow-lg w-100"
+                                        style="max-height: 600px; object-fit: cover;">
 
                                     <div class="position-absolute bottom-0 start-0 w-100">
                                         <div class="text-white p-3"
                                             style="background: rgba(0,0,0,0.5); border-radius: 1rem;">
                                             <span class="badge bg-primary"
                                                 style="font-size: 0.75rem;">{{ $item->kategori->nama ?? 'Umum' }}</span>
-                                            <h2 class="fw-bold mt-2 mb-3" style="font-size: 2rem;">{{ $item->judul }}
-                                            </h2>
-                                            <p class="mb-3" style="font-size: 0.9rem;">
-                                                {{ Str::limit($item->konten, 335) }}</p>
-                                            <div class="d-flex align-items-center gap-2 mb-3"
+                                            <h2 class="fw-bold mt-2 mb-3 fs-4 fs-md-2">{{ $item->judul }}</h2>
+                                            <p class="mb-3 d-none d-md-block" style="font-size: 0.9rem;">
+                                                {{ Str::limit($item->konten, 335) }}
+                                            </p>
+                                            <div class="d-flex flex-wrap align-items-center gap-2 mb-3"
                                                 style="font-size: 0.8rem;">
                                                 <small>Oleh: Gilang Sampurno</small>
                                                 <small>•</small>
@@ -156,23 +150,30 @@
                         @endforeach
                     </div>
 
-                    {{-- BERITA SAMPING (urutan ke 2, 3, 4) --}}
-                    <div class="col-md-4 d-flex flex-column" style="height: 600px;">
-                        <div class="d-grid gap-3 h-100" style="grid-template-rows: repeat(3, 1fr);">
+
+                    {{-- BERITA SAMPING (2,3,4) --}}
+                    <div class="col-lg-4 col-12 d-flex flex-column" style="max-height:600px;">
+                        <div class="d-flex flex-column gap-3 h-100">
                             @foreach ($heroBeritaSamping as $item)
                                 @if ($loop->iteration > 1 && $loop->iteration <= 4)
-                                    <div class="d-flex bg-light rounded shadow-sm overflow-hidden h-100">
-                                        <div class="flex-shrink-0" style="width:190px;height:100%;overflow:hidden;">
-                                            <img src="{{ $item->gambar ? asset('uploads/berita/' . $item->gambar) : asset('dummy/monarch-butterfly.png') }}"
-                                                alt="{{ $item->judul }}" class="w-100 h-100 object-fit-cover">
-                                        </div>
-                                        <div class="p-2 flex-grow-1 d-flex flex-column justify-content-between">
-                                            <div>
-                                                <span
-                                                    class="badge bg-primary">{{ $item->kategori->nama ?? 'Umum' }}</span>
-                                                <h6 class="fw-bold mt-1 mb-1">{{ Str::limit($item->judul, 50) }}</h6>
+                                    <div class="card border-0 shadow-sm flex-fill">
+                                        <div class="row g-0 h-100">
+                                            {{-- Gambar --}}
+                                            <div class="col-12 col-md-5" style="overflow:hidden;">
+                                                <img src="{{ $item->gambar ? asset('uploads/berita/' . $item->gambar) : asset('dummy/monarch-butterfly.png') }}"
+                                                    alt="{{ $item->judul }}" class="img-fluid w-100 h-100"
+                                                    style="object-fit: cover;">
                                             </div>
-                                            <small class="text-muted">{{ $item->waktu->diffForHumans() }}</small>
+
+                                            <div class="col-12 col-md-7 d-flex flex-column justify-content-between p-2">
+                                                <div>
+                                                    <span
+                                                        class="badge bg-primary">{{ $item->kategori->nama ?? 'Umum' }}</span>
+                                                    <h6 class="fw-bold mt-1 mb-1">{{ Str::limit($item->judul, 70) }}
+                                                    </h6>
+                                                </div>
+                                                <small class="text-muted">{{ $item->waktu->diffForHumans() }}</small>
+                                            </div>
                                         </div>
                                     </div>
                                 @endif
@@ -181,7 +182,6 @@
                     </div>
 
                 </div>
-            </div>
             </div>
         </section>
     @endforeach
